@@ -31,7 +31,7 @@ const gameBoard = (() => {
   const checkWinner = () => {
     const winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
                            [0, 3, 6], [1, 4, 7], [3, 5, 8],
-                           [0, 4, 8], [3, 4, 6]];
+                           [0, 4, 8], [2, 4, 6]];
     return winConditions.some(pattern => {
       const [a, b, c] = pattern;
       return (board[a] === getCurrentPlayer() && 
@@ -71,6 +71,7 @@ const gameBoard = (() => {
 const displayController = (function () {
   const promptDisplay = document.querySelector('.player-prompt');
   const cells = document.querySelectorAll('.cell');
+  const newGameButton = document.querySelector('.new-game-button');
   const game = gameBoard(); 
   cells.forEach(cell => {
     cell.addEventListener('click', (e) => {
@@ -90,10 +91,18 @@ const displayController = (function () {
     });
   });
 
+  newGameButton.addEventListener('click', () => {
+    game.resetBoard();
+    promptDisplay.textContent = `${game.getCurrentPlayer()} moves`;
+    updateCells();
+  });
+
   const updateCells = () => {
     cells.forEach((cell, index) => {
       cell.textContent = game.getBoard()[index];
     })
-  }
+  };
+
+
 
 })();
