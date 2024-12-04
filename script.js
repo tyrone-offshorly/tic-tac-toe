@@ -18,12 +18,10 @@ const gameBoard = (() => {
         console.log(getBoard());
         isGameOver = true;
         winner = getCurrentPlayer();
-        resetBoard();
       } else if (checkTie()) {
         console.log("It's a tie");
         console.log(getBoard());
         isGameOver = true;
-        resetBoard();
       } else {
         moveCount++;
       }
@@ -68,40 +66,34 @@ const gameBoard = (() => {
   const getGameOver = () => isGameOver;
 
   return {move, getBoard, checkWinner, resetBoard, getCurrentPlayer, getGameOver};
-})();
+});
 
 const displayController = (function () {
-  const promptDisplay = document.querySelector('player-prompt');
+  const promptDisplay = document.querySelector('.player-prompt');
   const cells = document.querySelectorAll('.cell');
-  
+  const game = gameBoard(); 
   cells.forEach(cell => {
     cell.addEventListener('click', (e) => {
-      console.log(e.target.getAttribute("data-index") - 1);
+      if(!game.getGameOver()) {
+        game.move(Number(cell.getAttribute("data-index") - 1));
+        if(game.getGameOver()) {
+          if(game.checkWinner()) {
+            promptDisplay.textContent = `${game.getCurrentPlayer()} wins`;
+          } else {
+            promptDisplay.textContent = "It's a tie";
+          }
+        } else {
+          promptDisplay.textContent = `${game.getCurrentPlayer()} moves`
+        }
+      }
+      updateCells();
     });
   });
 
-})();
+  const updateCells = () => {
+    cells.forEach((cell, index) => {
+      cell.textContent = game.getBoard()[index];
+    })
+  }
 
-// X wins
-gameBoard.move(0); // X
-gameBoard.move(3); // O
-gameBoard.move(1); // X
-gameBoard.move(4); // O
-gameBoard.move(2); // X wins with the top row
-// O wins
-gameBoard.move(0); // X
-gameBoard.move(3); // O
-gameBoard.move(1); // X
-gameBoard.move(4); // O
-gameBoard.move(8); // X
-gameBoard.move(5); // O wins with the second column
-// Tie
-gameBoard.move(0); // X
-gameBoard.move(1); // O
-gameBoard.move(2); // X
-gameBoard.move(4); // O
-gameBoard.move(3); // X
-gameBoard.move(5); // O
-gameBoard.move(7); // X
-gameBoard.move(6); // O
-gameBoard.move(8); // X
+})();
