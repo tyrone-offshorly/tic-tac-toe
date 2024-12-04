@@ -65,7 +65,21 @@ const gameBoard = (() => {
 
   const getBoard = () => board;
 
-  return {move, getBoard, checkWinner};
+  const getGameOver = () => isGameOver;
+
+  return {move, getBoard, checkWinner, resetBoard, getCurrentPlayer, getGameOver};
+})();
+
+const displayController = (function () {
+  const promptDisplay = document.querySelector('player-prompt');
+  const cells = document.querySelectorAll('.cell');
+  
+  cells.forEach(cell => {
+    cell.addEventListener('click', (e) => {
+      console.log(e.target.getAttribute("data-index") - 1);
+    });
+  });
+
 })();
 
 // X wins
